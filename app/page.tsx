@@ -2,6 +2,7 @@
 
 import ActivityForm from '@/components/forms/ActivityForm'
 import LocationForm from '@/components/forms/LocationForm'
+import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import useTagContext from '@/hooks/useTagContext'
 import { Flag, MapPin } from 'lucide-react'
@@ -71,11 +72,16 @@ function MenuOptions() {
 
 
 function FormSection() {
-  const {selectedTag} = useTagContext()
+  const {selectedTag, setSelectedTag} = useTagContext()
 
   return (
     <div className="w-full h-full">
-      {selectedTag === "Activity Details" ? <ActivityForm /> : <LocationForm />}
+      {selectedTag === "Activity Details" ? 
+          <ActivityForm />
+          :
+          <LocationForm />
+      }
+      
     </div>
   )
 }
