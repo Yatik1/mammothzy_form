@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import useTagContext from '@/hooks/useTagContext'
 import { Flag, MapPin } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 
 interface MenuProps {
   icon:React.ReactNode
@@ -30,11 +30,11 @@ const options:MenuProps[] = [
 function page() {
 
   return (
-    <div className='w-full h-screen flex flex-col p-10'>
+    <div className=' flex flex-col m-10'>
       <h2 className='font-bold text-2xl tracking-tight'>Create new Activity</h2>
       <div className="flex flex-grow w-full h-full">
         <MenuOptions />
-        <Separator orientation={'vertical'} />
+        <Separator orientation={'vertical'} className='h-screen mx-2 py-2'/>
         <FormSection />
       </div>
     </div>
@@ -47,7 +47,7 @@ function MenuOptions() {
 
   return(
       
-      <div className="w-1/5 h-full">
+      <div className="w-1/5">
           <div className="flex items-start flex-col p-2">
           {options.map((option, index) => {
             const {icon, tag} = option
@@ -74,8 +74,9 @@ function MenuOptions() {
 function FormSection() {
   const {selectedTag, setSelectedTag} = useTagContext()
 
+
   return (
-    <div className="w-full h-full">
+    <div className="flex w-screen">
       {selectedTag === "Activity Details" ? 
           <ActivityForm />
           :
