@@ -73,6 +73,7 @@ function FormComponent() {
   function onSubmit(values : z.infer<typeof formSchema>) {
     sessionStorage.removeItem("activityFormData")
     sessionStorage.removeItem("locationFormData")
+    console.log("Location Details" , values)
     toast({
       title:"Form Submit Successfully",
     })
