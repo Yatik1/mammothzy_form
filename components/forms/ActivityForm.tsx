@@ -8,8 +8,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Textarea } from '../ui/textarea'
 import { Label } from '../ui/label'
-import { Checkbox } from '../ui/checkbox'
 import { toast } from '@/hooks/use-toast'
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 
 function ActivityForm() {
 
@@ -32,12 +32,18 @@ function FormComponent() {
 
   const formSchema = z.object({
     name:z.string().min(2 , {message : "Activity name must at least 2 characters"}),
-    description:z.string()
-                 .min(5 , {message: "Description must at least 5 characters"})
-                 .max(200, {message: "Description must at most 200 characters"}) ,
+    description:z.string().min(5 , {message: "Description must at least 5 characters"}).max(200, {message: "Description must at most 200 characters"}),
+    
+    activity_type:z.enum(["indoor","outdoor","virtual"] , {
+      required_error: "You need to select an activity type."
+    }),
 
-    min_members:z.string(),
-    max_members:z.string(),
+    location_type:z.enum(["provided_location","user_location"] , {
+      required_error:"You need to select a location type."
+    }),
+
+    min_members:z.string().optional(),
+    max_members:z.string().optional(),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,8 +69,9 @@ function FormComponent() {
     sessionStorage.setItem("activityFormData" , JSON.stringify(values))
     toast({
       title:"Data Saved",
-      description:"Provided activity data have been saved successfully"
+      description:"Activity data have been saved successfully"
     })
+    console.log("Activity Details : " , values)
     setSelectedTag("Location Details")
   }
 
@@ -72,6 +79,8 @@ function FormComponent() {
   return (
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
+
+          {/* name field */}
           <FormField
             control={form.control}
             name='name'
@@ -86,6 +95,7 @@ function FormComponent() {
             )}
           />
 
+          {/* About field */}
           <FormField
             control={form.control}
             name='description'
@@ -100,7 +110,87 @@ function FormComponent() {
             )}
           />
 
+          {/* activity type field */}
+          <FormField 
+            control={form.control}
+            name='activity_type'
+            render={({field}) => (
+              <FormItem>
+                <FormLabel>Please select the activity type <span className='text-red-500'>*</span> </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={(value) => field.onChange(value)}
+                    value={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="indoor" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Indoor
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="outdoor" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Outdoor
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="virtual" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Virtual
+                    </FormLabel>
+                  </FormItem>
 
+                  </RadioGroup>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          {/* location type field */}
+          <FormField 
+            control={form.control}
+            name='location_type'
+            render={({field}) => (
+              <FormItem>
+                <FormLabel>Please select the type of location <span className='text-red-500'>*</span> </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={(value) => field.onChange(value)}
+                    value={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="provided_location" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Provided Location
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="user_location" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      User Location
+                    </FormLabel>
+                  </FormItem>
+
+                  </RadioGroup>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          {/* min and max memebers field */}
           <div className="flex flex-col gap-3">
           <Label>How many members can take part in the activity?</Label>
           <div className='flex gap-4'>
