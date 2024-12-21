@@ -37,10 +37,7 @@ function FormComponent() {
                  .max(200, {message: "Description must at most 200 characters"}) ,
 
     min_members:z.string(),
-    // number({invalid_type_error:"Must be number"}).positive("Must be greater than zero"),
     max_members:z.string(),
-    // .number({invalid_type_error:"Must be number"}),
-    // location_type: z.array(z.string()).nonempty({ message: "Select at least one location type" }),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,9 +45,8 @@ function FormComponent() {
     defaultValues : {
       name: "",
       description:"",
-      min_members:"0",
-      max_members:"0",
-      // location_type:[],
+      min_members:"",
+      max_members:"",
     }
   })
 
