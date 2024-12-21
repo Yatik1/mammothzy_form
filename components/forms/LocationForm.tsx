@@ -41,7 +41,7 @@ function FormComponent() {
     city:z.string(),
     state:z.string(),
     contactNumber:z.string(),
-    contactName:z.string().min(2 , {message:"Contact name must at least 2 characters"})
+    contactName:z.string().optional()
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -65,14 +65,21 @@ function FormComponent() {
     }
   }, [form]);
 
+  function onPrevious(values:z.infer<typeof formSchema>) {
+    sessionStorage.setItem("locationFormData" , JSON.stringify(values))
+    setSelectedTag("Activity Details")
+  }
 
   function onSubmit(values : z.infer<typeof formSchema>) {
-    sessionStorage.setItem("locationFormData" , JSON.stringify(values))
+    sessionStorage.removeItem("activityFormData")
+    sessionStorage.removeItem("locationFormData")
     toast({
-      title:"Data Saved",
-      description:"Provided location data have been saved successfully"
+      title:"Form Submit Successfully",
     })
+    form.reset()
     router.push("/submitted")
+    setSelectedTag("Activity Details")
+
   }
 
 
@@ -98,7 +105,7 @@ function FormComponent() {
             name='address2'
             render={({field}) => (
               <FormItem>
-                <FormLabel> Address Line 2 <span className='text-red-500'>*</span> </FormLabel>
+                <FormLabel> Address Line 2</FormLabel>
                 <FormControl>
                   <Input placeholder='Other information, e.g., building name, landmark, etc. ' {...field} />
                 </FormControl>
@@ -178,7 +185,7 @@ function FormComponent() {
                 name='contactName'
                 render={({field}) => (
                   <FormItem>
-                    <FormLabel>Contact Name <span className='text-red-500'>*</span> </FormLabel>
+                    <FormLabel>Contact Name </FormLabel>
                     <FormControl>
                       <Input placeholder='Your contact name' className='w-[15rem]' {...field} />
                     </FormControl>
@@ -190,7 +197,7 @@ function FormComponent() {
           </div>
 
          <div className="flex gap-4">
-         <Button onClick={() => setSelectedTag("Activity Details")} variant={'ghost'} className='rounded-full px-6 border'>Previous</Button>
+         <Button onClick={() => onPrevious(form.getValues())}  variant={'ghost'} className='rounded-full px-6 border'>Previous</Button>
          <Button type='submit' className='rounded-full px-6 bg-[#001D44]'>Submit</Button>
          </div>
         </form>
